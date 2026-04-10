@@ -1,8 +1,15 @@
 import { type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
+export interface TableColumn {
+  key: string;
+  label: string;
+  width?: string;
+}
+
 export interface TableProps {
   children: ReactNode;
+  columns?: TableColumn[];
   className?: string;
 }
 
