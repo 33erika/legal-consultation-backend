@@ -1,0 +1,33 @@
+server:
+  host: "0.0.0.0"
+  port: 8081
+
+database:
+  driver: "sqlite"  # 使用SQLite开发数据库
+  host: "sqlite"
+  port: 0
+  user: ""
+  password: ""
+  dbname: "./data/legal_consultation"
+  sslmode: "disable"
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expire_hours: 24
+
+upload:
+  path: "./uploads"
+  max_size: 52428800  # 50MB
+  allowed_ext:
+    - pdf
+    - doc
+    - docx
+    - xlsx
+    - xls
+    - jpg
+    - jpeg
+    - png
+
+dingtalk:
+  webhook_url: ""
+  enabled: false
