@@ -1,0 +1,32 @@
+server:
+  host: "0.0.0.0"
+  port: 8080
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  dbname: "legal_consultation"
+  sslmode: "disable"
+
+jwt:
+  secret: "your-secret-key-change-in-production"
+  expire_hours: 24
+
+upload:
+  path: "./uploads"
+  max_size: 52428800  # 50MB
+  allowed_ext:
+    - pdf
+    - doc
+    - docx
+    - xlsx
+    - xls
+    - jpg
+    - jpeg
+    - png
+
+dingtalk:
+  webhook_url: ""
+  enabled: false
