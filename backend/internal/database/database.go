@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
@@ -17,12 +18,23 @@ var db *gorm.DB
 func Initialize(cfg *config.DatabaseConfig) error {
 	var err error
 
-	dsn := cfg.DSN()
-	log.Printf("Connecting to database: %s:%d/%s", cfg.Host, cfg.Port, cfg.DBName)
+	// 支持 SQLite 作为开发数据库
+	var dsn string
+	if cfg.Driver == "sqlite" || cfg.Host == "sqlite" {
+		dsn = cfg.DBName + ".db"
+		log.Printf("Using SQLite database: %s", dsn)
+		db, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
+	} else {
+		// PostgreSQL
+		dsn = cfg.DSN()
+		log.Printf("Connecting to database: %s:%d/%s", cfg.Host, cfg.Port, cfg.DBName)
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
+	}
 
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
 	if err != nil {
 		return fmt.Errorf("failed to connect database: %w", err)
 	}
