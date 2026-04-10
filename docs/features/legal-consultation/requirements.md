@@ -1,3 +1,14 @@
+---
+AIGC:
+    ContentProducer: Minimax Agent AI
+    ContentPropagator: Minimax Agent AI
+    Label: AIGC
+    ProduceID: 40d576b7a24379a6b638b5f4e63f067c
+    PropagateID: 40d576b7a24379a6b638b5f4e63f067c
+    ReservedCode1: 304402206bd6a03d0b6b5af9d818094f5bef14c3584a80a94a61d6d6a375fde4e7c540cf02207de921b68f22676cd26f64501ce3516c78b8eafa7bf01fc093dfd87d92677d92
+    ReservedCode2: 30440220486789b8b345ef232525a111e06cb65b3c9f8495e973643d8dcd42171a60f6af022028f89733e3e3bf6d0b32817266b7f2a19f24b3b5d0913bebc6dd2c4a1775d5f9
+---
+
 # Requirements: 法务部法律咨询系统
 
 ## Overview
