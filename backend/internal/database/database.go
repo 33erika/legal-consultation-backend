@@ -100,12 +100,12 @@ func seedData() error {
 		db.Create(&dept)
 	}
 
-	// 创建用户 (密码: admin123, bcrypt hash)
+	// 创建测试用户 (密码统一为: 密码, bcrypt hash)
 	users := []models.User{
 		{
 			ID:           "user-admin",
 			EmployeeID:   "admin",
-			Password:     "$2a$10$N9qo8uLOickgx2ZMRZoMye1sP3e5q3e5e3e3e3e3e3e3e3e3e3e3", // admin123
+			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "系统管理员",
 			Email:        "admin@example.com",
 			Role:         models.RoleAdmin,
@@ -114,10 +114,10 @@ func seedData() error {
 		},
 		{
 			ID:           "user-legal-1",
-			EmployeeID:   "legal001",
-			Password:     "$2a$10$N9qo8uLOickgx2ZMRZoMye1sP3e5q3e5e3e3e3e3e3e3e3e3e3e3e3e3", // legal001
+			EmployeeID:   "合法",
+			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "法务专员张三",
-			Email:        "legal001@example.com",
+			Email:        "legal@example.com",
 			Role:         models.RoleLegalStaff,
 			DepartmentID: stringPtr("dept-001"),
 			Status:       models.UserStatusActive,
@@ -125,7 +125,7 @@ func seedData() error {
 		{
 			ID:           "user-legal-head",
 			EmployeeID:   "legal-head",
-			Password:     "$2a$10$N9qo8uLOickgx2ZMRZoMye1sP3e5q3e5e3e3e3e3e3e3e3e3e3e3e3e3", // legal-head
+			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "法务负责人李四",
 			Email:        "legal-head@example.com",
 			Role:         models.RoleLegalHead,
@@ -134,10 +134,10 @@ func seedData() error {
 		},
 		{
 			ID:           "user-employee-1",
-			EmployeeID:   "emp001",
-			Password:     "$2a$10$N9qo8uLOickgx2ZMRZoMye1sP3e5q3e5e3e3e3e3e3e3e3e3e3e3e3e3", // emp001
+			EmployeeID:   "员工",
+			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "员工王五",
-			Email:        "emp001@example.com",
+			Email:        "employee@example.com",
 			Role:         models.RoleEmployee,
 			DepartmentID: stringPtr("dept-003"),
 			Status:       models.UserStatusActive,
