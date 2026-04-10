@@ -1,0 +1,18 @@
+[railway]
+  name = "legal-consultation-api"
+  version = 2
+
+[build]
+  builder = "go"
+  buildCommand = "go build -buildvcs=false -o server ."
+
+[deploy]
+  startCommand = "./server"
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyAmount = 10
+  healthcheckPath = "/api/v1/health"
+  healthcheckInterval = 30
+
+[[ports]]
+  port = 8081
+  frontend = true
