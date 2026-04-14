@@ -65,13 +65,6 @@ func autoMigrate() error {
 		&models.Attachment{},
 		&models.ConsultationAttachment{},
 
-		// 模板相关
-		&models.TemplateRequest{},
-		&models.TemplateRequestAttachment{},
-		&models.TemplateApprovalLog{},
-		&models.Template{},
-		&models.TemplateVersion{},
-
 		// 系统配置
 		&models.NotificationConfig{},
 		&models.OperationLog{},
@@ -114,7 +107,7 @@ func seedData() error {
 		},
 		{
 			ID:           "user-legal-1",
-			EmployeeID:   "合法",
+			EmployeeID:   "legal001",
 			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "法务专员张三",
 			Email:        "legal@example.com",
@@ -134,7 +127,7 @@ func seedData() error {
 		},
 		{
 			ID:           "user-employee-1",
-			EmployeeID:   "员工",
+			EmployeeID:   "emp001",
 			Password:     "$2a$10$zzsnejcVLottn6SpZy6ImOs8dxygqMHW4v1CHEVeewl61h64ITwmK", // 密码
 			Name:         "员工王五",
 			Email:        "employee@example.com",

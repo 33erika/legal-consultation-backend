@@ -10,16 +10,13 @@ import (
 
 type StatisticsService struct {
 	consultationRepo *repository.ConsultationRepository
-	templateRepo     *repository.TemplateRepository
 }
 
 func NewStatisticsService(
 	consultationRepo *repository.ConsultationRepository,
-	templateRepo *repository.TemplateRepository,
 ) *StatisticsService {
 	return &StatisticsService{
 		consultationRepo: consultationRepo,
-		templateRepo:     templateRepo,
 	}
 }
 
@@ -33,13 +30,6 @@ func (s *StatisticsService) GetOverview(startDate, endDate string) (map[string]i
 		return nil, err
 	}
 	result["consultation_stats"] = consultationStats
-
-	// 模板统计
-	templateStats, err := s.templateRepo.GetRequestStats()
-	if err != nil {
-		return nil, err
-	}
-	result["template_stats"] = templateStats
 
 	return result, nil
 }

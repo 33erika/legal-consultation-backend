@@ -10,16 +10,13 @@ import (
 
 type LegalHandler struct {
 	consultationSvc *service.ConsultationService
-	templateSvc     *service.TemplateService
 }
 
 func NewLegalHandler(
 	consultationSvc *service.ConsultationService,
-	templateSvc *service.TemplateService,
 ) *LegalHandler {
 	return &LegalHandler{
 		consultationSvc: consultationSvc,
-		templateSvc:     templateSvc,
 	}
 }
 
@@ -31,15 +28,8 @@ func (h *LegalHandler) Dashboard(c *gin.Context) {
 		return
 	}
 
-	templateStats, err := h.templateSvc.GetRequestStats()
-	if err != nil {
-		utils.InternalError(c, err.Error())
-		return
-	}
-
 	utils.Success(c, gin.H{
 		"consultation_stats": consultationStats,
-		"template_stats":    templateStats,
 	})
 }
 

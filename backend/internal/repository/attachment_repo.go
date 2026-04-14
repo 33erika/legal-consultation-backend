@@ -54,17 +54,3 @@ func (r *AttachmentRepository) ListConsultationAttachments(consultationID string
 func (r *AttachmentRepository) DeleteConsultationAttachments(consultationID string) error {
 	return r.db.Delete(&models.ConsultationAttachment{}, "consultation_id = ?", consultationID).Error
 }
-
-// 模板申请附件关联
-func (r *AttachmentRepository) CreateTemplateRequestAttachment(ta *models.TemplateRequestAttachment) error {
-	return r.db.Create(ta).Error
-}
-
-func (r *AttachmentRepository) ListTemplateRequestAttachments(requestID string) ([]models.TemplateRequestAttachment, error) {
-	var tas []models.TemplateRequestAttachment
-	err := r.db.
-		Preload("Attachment").
-		Where("template_request_id = ?", requestID).
-		Find(&tas).Error
-	return tas, err
-}

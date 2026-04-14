@@ -12,19 +12,15 @@ import (
 
 type AdminHandler struct {
 	userRepo         *repository.UserRepository
-	templateRepo     *repository.TemplateRepository
 	notificationSvc *service.NotificationService
 }
 
 func NewAdminHandler(
-	userRepo *repository.UserRepository,
-	templateRepo *repository.TemplateRepository,
-	notificationSvc *service.NotificationService,
+	adminSvc *service.AdminService,
 ) *AdminHandler {
 	return &AdminHandler{
-		userRepo:         userRepo,
-		templateRepo:     templateRepo,
-		notificationSvc: notificationSvc,
+		userRepo:         adminSvc.GetUserRepo(),
+		notificationSvc: adminSvc.GetNotificationSvc(),
 	}
 }
 
@@ -143,18 +139,6 @@ func (h *AdminHandler) DeleteDepartment(c *gin.Context) {
 	utils.Success(c, nil)
 }
 
-// ============ 合同类型管理 ============
-
-// ListContractTypes 合同类型列表
-func (h *AdminHandler) ListContractTypes(c *gin.Context) {
-	utils.Success(c, []string{"采购合同", "劳动合同", "租赁合同", "销售合同", "保密协议", "服务合同", "其他"})
-}
-
-// UpdateContractTypes 更新合同类型
-func (h *AdminHandler) UpdateContractTypes(c *gin.Context) {
-	utils.Success(c, nil)
-}
-
 // ============ 咨询类型配置 ============
 
 // ListConsultationTypes 咨询类型配置
@@ -172,10 +156,10 @@ func (h *AdminHandler) UpdateConsultationType(c *gin.Context) {
 
 // GetSystemConfig 获取系统配置
 func (h *AdminHandler) GetSystemConfig(c *gin.Context) {
-	config := h.notificationSvc.GetConfig()
+	cfg := h.notificationSvc.GetConfig()
 	utils.Success(c, gin.H{
-		"dingtalk_webhook_url": config.WebhookURL,
-		"dingtalk_enabled":     config.Enabled,
+		"dingtalk_webhook_url": cfg.WebhookURL,
+		"dingtalk_enabled":     cfg.Enabled,
 	})
 }
 

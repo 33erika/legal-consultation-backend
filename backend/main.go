@@ -32,23 +32,21 @@ func main() {
 	db := database.GetDB()
 	userRepo := repository.NewUserRepository(db)
 	consultationRepo := repository.NewConsultationRepository(db)
-	templateRepo := repository.NewTemplateRepository(db)
 	attachmentRepo := repository.NewAttachmentRepository(db)
 
 	// 初始化服务
 	authSvc := service.NewAuthService(userRepo, &cfg.JWT)
 	notificationSvc := service.NewNotificationService(&cfg.DingTalk)
 	consultationSvc := service.NewConsultationService(consultationRepo, attachmentRepo, userRepo, notificationSvc)
-	templateSvc := service.NewTemplateService(templateRepo, attachmentRepo, notificationSvc)
-	statisticsSvc := service.NewStatisticsService(consultationRepo, templateRepo)
+	statisticsSvc := service.NewStatisticsService(consultationRepo)
+	adminSvc := service.NewAdminService(userRepo, notificationSvc)
 
 	// 初始化处理器
 	authHandler := handler.NewAuthHandler(authSvc)
 	consultationHandler := handler.NewConsultationHandler(consultationSvc)
-	templateHandler := handler.NewTemplateHandler(templateSvc)
-	legalHandler := handler.NewLegalHandler(consultationSvc, templateSvc)
+	legalHandler := handler.NewLegalHandler(consultationSvc)
 	statisticsHandler := handler.NewStatisticsHandler(statisticsSvc)
-	adminHandler := handler.NewAdminHandler(userRepo, templateRepo, notificationSvc)
+	adminHandler := handler.NewAdminHandler(adminSvc)
 
 	// 初始化 Gin
 	r := gin.Default()
@@ -58,7 +56,7 @@ func main() {
 	r.Use(middleware.CORSMiddleware())
 
 	// 路由
-	setupRoutes(r, authHandler, consultationHandler, templateHandler, legalHandler, statisticsHandler, adminHandler, authSvc)
+	setupRoutes(r, authHandler, consultationHandler, legalHandler, statisticsHandler, adminHandler, authSvc)
 
 	// 启动服务器
 	addr := fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
@@ -72,7 +70,6 @@ func setupRoutes(
 	r *gin.Engine,
 	authHandler *handler.AuthHandler,
 	consultationHandler *handler.ConsultationHandler,
-	templateHandler *handler.TemplateHandler,
 	legalHandler *handler.LegalHandler,
 	statisticsHandler *handler.StatisticsHandler,
 	adminHandler *handler.AdminHandler,
@@ -114,30 +111,6 @@ func setupRoutes(
 				consultations.GET("/search", consultationHandler.Search)
 			}
 
-			// 模板申请
-			templateRequests := protected.Group("/template-requests")
-			{
-				templateRequests.POST("", templateHandler.CreateRequest)
-				templateRequests.GET("", templateHandler.ListMyRequests)
-				templateRequests.GET("/:id", templateHandler.GetRequest)
-				templateRequests.POST("/:id/approve", middleware.RequireRole(models.RoleSupervisor), templateHandler.Approve)
-				templateRequests.POST("/:id/draft", middleware.RequireRole(models.RoleLegalStaff), templateHandler.Draft)
-				templateRequests.POST("/:id/save-draft", middleware.RequireRole(models.RoleLegalStaff), templateHandler.SaveDraft)
-				templateRequests.POST("/:id/review", middleware.RequireRole(models.RoleLegalHead), templateHandler.Review)
-			}
-
-			// 合同模板库
-			templates := protected.Group("/templates")
-			{
-				templates.GET("", templateHandler.ListTemplates)
-				templates.GET("/:id", templateHandler.GetTemplate)
-				templates.GET("/:id/download", templateHandler.DownloadTemplate)
-				templates.GET("/:id/versions", templateHandler.GetTemplateVersions)
-				templates.GET("/compare", templateHandler.CompareVersions)
-				templates.PUT("/:id/status", middleware.RequireRole(models.RoleLegalHead), templateHandler.ToggleTemplateStatus)
-				templates.POST("/:id/initiate-update", templateHandler.InitiateUpdate)
-			}
-
 			// 法务工作台
 			legal := protected.Group("/legal")
 			legal.Use(middleware.RequireRole(models.RoleLegalStaff, models.RoleLegalHead))
@@ -176,9 +149,6 @@ func setupRoutes(
 				admin.POST("/departments", adminHandler.CreateDepartment)
 				admin.PUT("/departments/:id", adminHandler.UpdateDepartment)
 				admin.DELETE("/departments/:id", adminHandler.DeleteDepartment)
-
-				admin.GET("/contract-types", adminHandler.ListContractTypes)
-				admin.PUT("/contract-types", adminHandler.UpdateContractTypes)
 
 				admin.GET("/consultation-types", adminHandler.ListConsultationTypes)
 				admin.PUT("/consultation-types/:type", adminHandler.UpdateConsultationType)
